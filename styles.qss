@@ -1,0 +1,22 @@
+QWidget {
+    border-radius: 18px;
+}
+
+QTextEdit {
+    background: transparent;
+    border: none;
+}
+
+QMenu {
+    background: #202520;
+    color: #ffffff;
+    border: 1px solid #4a554a;
+}
+
+QMenu::item {
+    padding: 8px 28px;
+}
+
+QMenu::item:selected {
+    background: #405340;
+}

@@ -1,114 +1,26 @@
+from pathlib import Path
 import json
-import os
-import sys
+from appdirs import user_data_dir
 
+APP_NAME = "DesktopBoard"
+APP_AUTHOR = "41ir377"
 
-def get_app_dir():
-    if getattr(sys, "frozen", False):
-        return os.path.dirname(os.path.abspath(sys.executable))
+DATA_DIR = Path(user_data_dir(APP_NAME, APP_AUTHOR))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+STATE_FILE = DATA_DIR / "state.json"
 
-    return os.path.dirname(os.path.abspath(__file__))
-
-
-APP_DIR = get_app_dir()
-DATA_DIR = os.path.join(APP_DIR, "data")
-
-NOTES_FILE = os.path.join(DATA_DIR, "notes.json")
-CONFIG_FILE = os.path.join(DATA_DIR, "config.json")
-
-os.makedirs(DATA_DIR, exist_ok=True)
-
-
-DEFAULT_CONFIG = {
-    "x": 100,
-    "y": 100,
-    "w": 700,
-    "h": 500,
-
-    "opacity": 95,
-    "font_size": 22,
-
-    "text_color": "#ffffff"
-}
-
-
-def load_notes():
-
-    if not os.path.exists(NOTES_FILE):
-        return ""
-
+def load_state():
+    if not STATE_FILE.exists():
+        return {}
     try:
-        with open(
-            NOTES_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            data = json.load(f)
-
-            return data.get("text", "")
-
+        with STATE_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f)
     except Exception:
-        return ""
+        return {}
 
-
-def save_notes(text):
-
-    with open(
-        NOTES_FILE,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            {
-                "text": text
-            },
-            f,
-            ensure_ascii=False,
-            indent=2
-        )
-
-
-def load_config():
-
-    if not os.path.exists(CONFIG_FILE):
-
-        save_config(DEFAULT_CONFIG.copy())
-
-        return DEFAULT_CONFIG.copy()
-
+def save_state(state: dict):
     try:
-
-        with open(
-            CONFIG_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            data = json.load(f)
-
-        config = DEFAULT_CONFIG.copy()
-        config.update(data)
-
-        return config
-
+        with STATE_FILE.open("w", encoding="utf-8") as f:
+            json.dump(state, f, ensure_ascii=False, indent=2)
     except Exception:
-
-        return DEFAULT_CONFIG.copy()
-
-
-def save_config(config):
-
-    with open(
-        CONFIG_FILE,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            config,
-            f,
-            ensure_ascii=False,
-            indent=2
-        )
+        pass

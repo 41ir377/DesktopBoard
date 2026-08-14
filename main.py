@@ -6,7 +6,6 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QSystemTrayIcon,
     QMenu,
-    QAction,
     QDialog,
     QVBoxLayout,
     QLabel,
@@ -15,12 +14,13 @@ from PySide6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PySide6.QtGui import QIcon, QPixmap, QPainter, QColor, QFont
+from PySide6.QtGui import QIcon, QPixmap, QPainter, QColor, QFont, QAction
 from PySide6.QtCore import QTimer, Qt, QByteArray
 
 import storage
 
 RTL_RE = re.compile(r"[\u0600-\u06FF]")
+
 
 def create_icon(text="DB", size=64, bg_color=QColor(40, 40, 40), fg_color=QColor(255, 255, 255)):
     pix = QPixmap(size, size)
@@ -235,11 +235,13 @@ class MainWindow(QMainWindow):
         # save geometry on move end
         self.save_state()
 
+
 def main():
     app = QApplication(sys.argv)
     win = MainWindow()
     win.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
